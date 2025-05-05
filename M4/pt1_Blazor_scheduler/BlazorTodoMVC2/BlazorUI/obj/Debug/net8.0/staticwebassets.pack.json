@@ -1,0 +1,49 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\Jk\\Downloads\\BlazorTodoMVC2\\BlazorTodoMVC2\\BlazorUI\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\BlazorUI.bundle.scp.css",
+      "PackagePath": "staticwebassets\\BlazorUI.ao8xz8eamv.bundle.scp.css"
+    },
+    {
+      "Id": "C:\\Users\\Jk\\Downloads\\BlazorTodoMVC2\\BlazorTodoMVC2\\BlazorUI\\wwwroot\\app.css",
+      "PackagePath": "staticwebassets\\app.css"
+    },
+    {
+      "Id": "C:\\Users\\Jk\\Downloads\\BlazorTodoMVC2\\BlazorTodoMVC2\\BlazorUI\\wwwroot\\bootstrap\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css"
+    },
+    {
+      "Id": "C:\\Users\\Jk\\Downloads\\BlazorTodoMVC2\\BlazorTodoMVC2\\BlazorUI\\wwwroot\\bootstrap\\bootstrap.min.css.map",
+      "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css.map"
+    },
+    {
+      "Id": "C:\\Users\\Jk\\Downloads\\BlazorTodoMVC2\\BlazorTodoMVC2\\BlazorUI\\wwwroot\\favicon.png",
+      "PackagePath": "staticwebassets\\favicon.png"
+    },
+    {
+      "Id": "C:\\Users\\Jk\\Downloads\\BlazorTodoMVC2\\BlazorTodoMVC2\\BlazorUI\\wwwroot\\js\\site.js",
+      "PackagePath": "staticwebassets\\js\\site.js"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.BlazorUI.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.BlazorUI.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.BlazorUI.props",
+      "PackagePath": "build\\BlazorUI.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.BlazorUI.props",
+      "PackagePath": "buildMultiTargeting\\BlazorUI.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.BlazorUI.props",
+      "PackagePath": "buildTransitive\\BlazorUI.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

@@ -1,0 +1,76 @@
+﻿@page "/adicionar-tarefa"
+@using BlazorUI.Models
+@using Radzen
+@using Radzen.Blazor
+@inject IJSRuntime JS
+@inject NavigationManager Navigation
+@inject TarefaService TarefaService
+@inject DialogService DialogService
+@rendermode InteractiveServer
+
+<h3>Adicionar Nova Tarefa</h3>
+
+<RadzenTemplateForm TItem="Tarefa" Data="@novaTarefa" Submit=@OnSubmit>
+    <RadzenStack Gap="1rem">
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Wrap="FlexWrap.Wrap">
+            <RadzenLabel Text="Title" Style="width: 4rem;" />
+            <RadzenTextBox @bind-Value="@novaTarefa.Text" Name="Text" Style="width: 12rem;" />
+            <RadzenRequiredValidator Component="Text" Text="Title is required" />
+        </RadzenStack>
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Wrap="FlexWrap.Wrap">
+            <RadzenLabel Text="Description" Style="width: 4rem;" />
+            <RadzenTextBox @bind-Value="@novaTarefa.Descricao" Name="Description" Style="width: 12rem; height: 6rem;" Multiline="true" />
+        </RadzenStack>
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Wrap="FlexWrap.Wrap">
+            <RadzenLabel Text="Start Date" Component="DatePickerWithTime" />
+            <RadzenDatePicker @bind-Value=@novaTarefa.Start ShowTime="true" ShowSeconds="true" HoursStep="1.5" MinutesStep="5" SecondsStep="10" DateFormat="MM/dd/yyyy HH:mm" Name="Start" />
+        </RadzenStack>
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Wrap="FlexWrap.Wrap">
+            <RadzenLabel Text="End Date" Component="DatePickerWithTime" />
+            <RadzenDatePicker @bind-Value=@novaTarefa.End ShowTime="true" ShowSeconds="true" HoursStep="1.5" MinutesStep="5" SecondsStep="10" DateFormat="MM/dd/yyyy HH:mm" Name="End" />
+            <RadzenRequiredValidator Component="End" Text="End is required" />
+            <RadzenCustomValidator Component="End" Validator="@(() => ValidateEnd(novaTarefa.End))" Text="End date must be greater than start date!" Popup="false" />
+        </RadzenStack>
+        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" >
+            <RadzenButton ButtonType="ButtonType.Submit" Text="Save" />
+        </RadzenStack>
+    </RadzenStack>
+</RadzenTemplateForm>
+
+<script>
+    function mostrarAlerta(msg) {
+        alert(msg);
+    }
+</script>
+
+@code {
+    private Tarefa novaTarefa = new Tarefa();
+
+    bool ValidateEnd(object value)
+    {
+        if (novaTarefa.Start == default)
+            novaTarefa.Start = DateTime.Today;
+        if (value is DateTime end)
+        {
+            return end > novaTarefa.Start;
+        }
+        return false;
+    }
+
+    async Task OnSubmit()
+    {
+        if (novaTarefa.Start == default)
+            novaTarefa.Start = DateTime.Today;
+        if (novaTarefa.Descricao == null)
+            novaTarefa.Descricao = "";
+        if (novaTarefa.End < novaTarefa.Start)
+        {
+            await JS.InvokeVoidAsync("mostrarAlerta", "End date must be greater than start date!");
+            return;
+        }
+        await TarefaService.AdicionarTarefaAsync(novaTarefa);
+        await JS.InvokeVoidAsync("alert", "Tarefa adicionada com sucesso!");
+        DialogService.Close(novaTarefa);
+        @* Navigation.NavigateTo("/tarefas"); *@
+    }
+}

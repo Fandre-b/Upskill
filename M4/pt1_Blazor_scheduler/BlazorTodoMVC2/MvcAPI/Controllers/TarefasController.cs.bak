@@ -1,0 +1,47 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using MvcAPI.Models;
+
+namespace MvcAPI.Controllers
+{
+    [Route("api/tarefas")]
+    [ApiController]
+    public class TarefasController : ControllerBase
+    {
+        private static List<Tarefa> tarefas = new List<Tarefa>
+    {
+        new Tarefa { Id = 1, Descricao = "Estudar Blazor", Concluida = false },
+        new Tarefa { Id = 2, Descricao = "Criar um projeto MVC", Concluida = false }
+    };
+
+        [HttpGet]
+        public IActionResult GetTarefas() => Ok(tarefas);
+
+        [HttpPost]
+        public IActionResult AdicionarTarefa([FromBody] Tarefa tarefa)
+        {
+            tarefa.Id = tarefas.Count + 1;
+            tarefas.Add(tarefa);
+            return CreatedAtAction(nameof(GetTarefas), new { id = tarefa.Id }, tarefa);
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult AtualizarTarefa(int id, [FromBody] Tarefa tarefaAtualizada)
+        {
+            var tarefa = tarefas.FirstOrDefault(t => t.Id == id);
+            if (tarefa == null) return NotFound();
+
+            tarefa.Concluida = tarefaAtualizada.Concluida;
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult RemoverTarefa(int id)
+        {
+            var tarefa = tarefas.FirstOrDefault(t => t.Id == id);
+            if (tarefa == null) return NotFound();
+
+            tarefas.Remove(tarefa);
+            return NoContent();
+        }
+    }
+}

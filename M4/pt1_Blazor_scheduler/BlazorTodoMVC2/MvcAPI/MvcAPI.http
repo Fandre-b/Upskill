@@ -1,0 +1,6 @@
+@MvcAPI_HostAddress = http://localhost:6000
+
+GET {{MvcAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,0 +1,118 @@
+﻿@page "/scheduler"
+@using Radzen
+@using Radzen.Blazor
+@using BlazorUI.Models
+@using BlazorUI.Components
+@using BlazorUI.Components.Pages
+@using BlazorUI.Components.Layout
+@inject IJSRuntime JS
+@inject NavigationManager Navigation
+@inject TarefaService TarefaService
+@inject DialogService DialogService
+@rendermode InteractiveServer
+@layout BlazorUI.Components.Layout.MainLayout
+
+<RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem" class="rz-p-4 rz-mb-6 rz-border-radius-1" Style="border: var(--rz-grid-cell-border);">
+    <RadzenLabel Text="Schedule Start Month:" />
+    <RadzenSelectBar @bind-Value="@startMonth" TextProperty="Text" ValueProperty="Value" Data="@(Enum.GetValues(typeof(Month)).Cast<Month>().Select(t => new { Text = $"{t}", Value = t }))" Size="ButtonSize.Small" class="rz-display-xl-flex" />
+</RadzenStack>
+
+<RadzenScheduler @ref=@scheduler SlotRender=@OnSlotRender style="height: 768px;" TItem="Tarefa" Data=@tarefas StartProperty="Start" EndProperty="End"
+    TextProperty="Text" SelectedIndex="1"
+    SlotSelect=@OnSlotSelect AppointmentSelect=@OnAppointmentSelect AppointmentRender=@OnAppointmentRender MonthSelect=@OnMonthSelect>
+    <RadzenMonthView />
+    <RadzenYearPlannerView StartMonth="@startMonth" />
+    <RadzenYearTimelineView StartMonth="@startMonth" />
+    <RadzenYearView StartMonth="@startMonth" />
+</RadzenScheduler>
+
+@* <EventConsole @ref=@console /> *@
+
+@code {
+    RadzenScheduler<Tarefa> scheduler;
+    @* EventConsole console; *@
+    Dictionary<DateTime, string> events = new Dictionary<DateTime, string>();
+    Month startMonth = Month.January;
+    private List<Tarefa> tarefas;
+    @* private Tarefa novaTarefa = new Tarefa(); *@
+
+    
+    protected override async Task OnInitializedAsync()
+    {
+        tarefas = await TarefaService.GetTarefasAsync();
+    }
+
+
+    void OnSlotRender(SchedulerSlotRenderEventArgs args)
+    {
+        // Highlight today in month view
+        if (args.View.Text == "Month" && args.Start.Date == DateTime.Today)
+        {
+            args.Attributes["style"] = "background: var(--rz-scheduler-highlight-background-color, rgba(255,220,40,.2));";
+        }
+
+        // Draw a line for new year if start month is not January
+        if ((args.View.Text == "Planner" || args.View.Text == "Timeline") && args.Start.Month == 12 && startMonth != Month.January)
+        {
+            args.Attributes["style"] = "border-bottom: thick double var(--rz-base-600);";
+        }
+    }
+
+    async Task OnSlotSelect(SchedulerSlotSelectEventArgs args)
+    {
+        @* console.Log($"SlotSelect: Start={args.Start} End={args.End}"); *@
+
+        if(args.View.Text != "Year")
+        {
+            Tarefa? novaTarefa = await DialogService.OpenAsync<AddTarefaDialog>("Add Tarefa",
+                    new Dictionary<string, object> { { "Start", args.Start }, { "End", args.End } });
+            if (novaTarefa != null)
+            {
+                await TarefaService.AdicionarTarefaAsync(novaTarefa);
+                tarefas = await TarefaService.GetTarefasAsync();
+                await scheduler.Reload();
+            }
+        }
+    }
+
+    async Task OnAppointmentSelect(SchedulerAppointmentSelectEventArgs<Tarefa> args)
+    {
+        @* console.Log($"AppointmentSelect: Tarefa={args.Data.Text}"); *@
+
+        await EditTarefa(args.Data);
+        await scheduler.Reload();
+    }
+
+    async Task OnMonthSelect(SchedulerMonthSelectEventArgs args)
+    {
+        @* console.Log($"MonthSelect: MonthStart={args.MonthStart} AppointmentCount={args.Appointments.Count()}"); *@
+
+        await Task.CompletedTask;
+    }
+
+
+    void OnAppointmentRender(SchedulerAppointmentRenderEventArgs<Tarefa> args)
+    {
+        // Never call StateHasChanged in AppointmentRender - would lead to infinite loop
+
+        if (args.Data.Text == "Birthday")
+        {
+            args.Attributes["style"] = "background: red";
+        }
+    }
+
+    public async Task EditTarefa(Tarefa tarefa)
+    {
+        var updatedTarefa = await DialogService.OpenAsync<EditTarefaDialog>(
+            "Edit Tarefa",
+            new Dictionary<string, object> { { "Tarefa", tarefa } }
+        );
+        if (updatedTarefa != null)
+        {
+            await TarefaService.AtualizarTarefaAsync(tarefa);
+            tarefas = await TarefaService.GetTarefasAsync();
+            await scheduler.Reload();
+            // instead add Object copy constructer, for less overhead
+        }
+    }
+}

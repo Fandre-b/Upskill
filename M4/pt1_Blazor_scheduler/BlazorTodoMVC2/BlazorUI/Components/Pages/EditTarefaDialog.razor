@@ -1,0 +1,57 @@
+﻿@using BlazorUI.Models 
+@using Radzen
+@using Radzen.Blazor
+@inject IJSRuntime JS
+@**@
+@inject NavigationManager Navigation 
+@inject TarefaService TarefaService 
+@inject DialogService DialogService
+@rendermode InteractiveServer 
+@* <RadzenDialog @rendermode="@RenderMode.InteractiveServer" /> *@
+@**@
+
+<RadzenTemplateForm TItem="Tarefa" Data="@novaTarefa" Submit=@OnSubmit>
+    <RadzenStack Gap="1rem">
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Wrap="FlexWrap.Wrap">
+            <RadzenLabel Text="Title" Style="width: 6rem;" />
+            <RadzenTextBox @bind-Value="@novaTarefa.Text" Name="Text" Style="width: 12rem;" />
+            <RadzenRequiredValidator Component="Text" Text="Title is required" />
+        </RadzenStack>
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Wrap="FlexWrap.Wrap">
+            <RadzenLabel Text="Description" Style="width: 6rem;" />
+            <RadzenTextBox @bind-Value="@novaTarefa.Descricao" Name="Description" Style="width: 12rem; height: 6rem;" Multiline="true" />
+        </RadzenStack>
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Wrap="FlexWrap.Wrap">
+            <RadzenLabel Text="Start" Style="width: 6rem;" />
+            <RadzenDatePicker @bind-Value="@novaTarefa.Start" Name="Start" ShowTime="true" Style="width: 12rem;" />
+        <RadzenRequiredValidator Component="Start" Text="Start is required" />
+        </RadzenStack>
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Wrap="FlexWrap.Wrap">
+            <RadzenLabel Text="End" Style="width: 6rem;" />
+            <RadzenDatePicker Name="End" @bind-Value="@novaTarefa.End" ShowTime="true" Style="width: 12rem;" />
+            <RadzenRequiredValidator Component="End" Text="End is required" />
+        </RadzenStack>
+        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" >
+            <RadzenButton ButtonType="ButtonType.Submit" Text="Save" />
+        </RadzenStack>
+    </RadzenStack>
+</RadzenTemplateForm>
+
+@code {
+    [Parameter]
+    public Tarefa Tarefa { get; set; }
+
+    Tarefa novaTarefa = new Tarefa();
+
+    protected override void OnParametersSet()
+    {
+        novaTarefa = Tarefa;
+    }
+
+    void OnSubmit()
+    {
+        if (novaTarefa.Descricao == null)
+                novaTarefa.Descricao = "";
+        DialogService.Close(novaTarefa);
+    }
+}

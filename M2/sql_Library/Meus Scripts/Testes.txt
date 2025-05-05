@@ -1,0 +1,157 @@
+Here are testing queries for each stored procedure and function defined in your script:
+💛✅❌
+### Stored Procedures
+
+1. **sp_total_obras**✅💛
+	
+	EXEC sp_total_obras;
+	
+
+2. **sp_total_obras_por_genero**✅
+	
+	EXEC sp_total_obras_por_genero;
+	
+
+3. **sp_top_requested_by_time**✅
+	
+	EXEC sp_top_requested_by_time @start_date = '2023-01-01', @end_date = '2023-12-31';
+	
+
+4. **sp_requisicoes_by_nucleo**✅
+	
+	EXEC sp_requisicoes_by_nucleo @start_date = '2023-01-01', @end_date = '2023-12-31';
+	
+
+5. **sp_update_image**✅
+	
+	EXEC sp_update_image @pk_obra = 1, @image_path = 'path/to/new_image.jpg', @isbn = '9780743273565';
+	EXEC sp_update_image @pk_obra = 16, @image_path = 'C:\Users\Jk\Pictures', @isbn = '9781234567890';
+
+6. **sp_insert_obra**✅
+	
+	EXEC sp_insert_obra @pk_nucleo = 1, @titulo = 'New Book', @isbn = '9781234567890', @autor = 'Author Name', @editora = 'Publisher', @ano = 2023, @image_path = 'C:\Users\Jk\PicturesInsertValues.png', @quantidade = 5;
+	--16 C:\Users\Jk\Pictures\InsertValues.png
+
+7. **sp_add_obra**✅ --//TODO THROW not THROWing
+	
+	EXEC sp_add_obra @pk_obra = 1, @pk_nucleo = 1, @quantidade = 10;
+	
+
+8. **sp_rm_obra**✅
+	
+	EXEC sp_rm_obra @pk_obra = 1, @pk_nucleo = 1, @quantidade = 5;
+	
+
+9. **sp_transfer_obra**✅
+	
+	EXEC sp_transfer_obra @pk_obra = 1, @pk_nucleo_origem = 1, @pk_nucleo_destino = 2, @quantidade = 5;
+	
+
+10. **sp_insert_leitor** ✅
+	
+	EXEC sp_insert_leitor @nome = 'New Leitor', @morada = '123 Street', @telefone = '1234567890', @email = 'new.leitor@example.com';
+	
+
+11. **sp_leitor_suspend**✅
+	
+	EXEC sp_leitor_suspend @pk_leitor = 1;
+	
+
+12. **sp_suspend_late** ✅
+	
+	EXEC sp_suspend_late @pk_leitor = 1;
+	
+
+13. **sp_devolution** ✅
+	
+	EXEC sp_devolution @pk_leitor = 1, @pk_obra = 1;
+	
+
+14. **sp_requisition**✅
+	
+	EXEC sp_requisition @pk_leitor = 1, @pk_obra = 1;
+	
+
+15. **sp_leitor_reactivate**✅
+	
+	EXEC sp_leitor_reactivate @pk_leitor = 1;
+	
+
+16. **sp_save_leitor_requesitions** ✅
+	
+	EXEC sp_save_leitor_requesitions @pk_leitor = 1, @pk_obra = 1;
+	
+
+17. **sp_del_leitor** ✅
+	
+	EXEC sp_del_leitor @pk_leitor = 1;
+	
+
+18. **sp_delete_inactive_leitor**✅
+	
+	EXEC sp_delete_inactive_leitor @pk_leitor = 1;
+	
+
+### Functions
+
+1. **fn_get_central_nucleo** ✅
+	
+	SELECT dbo.fn_get_central_nucleo();
+	
+
+2. **fn_available_copies** ✅
+	
+	SELECT dbo.fn_available_copies(@pk_obra = 1, @pk_nucleo = 1);
+	
+
+3. **fn_requisicoes_leitor** ✅
+	
+	SELECT * FROM dbo.fn_requisicoes_leitor(@pk_leitor = 1);
+	
+
+4. **fn_check_overtime** ✅
+	
+	SELECT dbo.fn_check_overtime(@data_levantamento = '2023-01-01', @data_devolucao = '2023-01-15', @dias_limite = 14);
+	
+
+5. **fn_active_leitors** ✅ 2024-10-10
+	
+	SELECT * FROM dbo.fn_active_leitors(@date_since = '2023-01-01');
+	
+
+6. **fn_inactive_leitors** ✅
+	
+	SELECT * FROM dbo.fn_inactive_leitors(@date_since = '2023-01-01');
+	
+
+
+Testing sp_cancel_leitor✅
+
+EXEC dbo.sp_cancel_leitor @pk_leitor = 1;
+
+Testing fn_search_obras✅
+
+SELECT * FROM dbo.fn_search_obras(@obra = 'Great Gatsby');
+SELECT * FROM dbo.fn_search_obras(@obra = NULL);
+
+Testing fn_search_obras_genre ✅ 
+SELECT * FROM dbo.fn_search_obras_genre(@genre = 'Fiction');
+SELECT * FROM dbo.fn_search_obras_genre(@genre = NULL);
+
+Testing fn_search_obras_nucleo✅
+SELECT * FROM dbo.fn_search_obras_nucleo(@nucleo = 'Central Library');
+SELECT * FROM dbo.fn_search_obras_nucleo(@nucleo = NULL);
+
+Testing sp_search_obras✅
+
+EXEC dbo.sp_search_obras @obra = 'Great Gatsby', @genre = 'Fiction', @nucleo = 'Central Library';
+
+EXEC dbo.sp_search_obras @obra = NULL, @genre = NULL, @nucleo = NULL;
+
+Testing fn_history (Obras requisitadas)✅
+EXEC dbo.sp_leitor_situation @pk_leitor = 1, @obra = 'Great Gatsby', @genre = 'Fiction', @nucleo = 'Central Library';
+EXEC dbo.sp_leitor_situation @pk_leitor = 1, @obra = NULL, @genre = NULL, @nucleo = NULL;
+
+Testing fn_history (Histórico de todas as obras requisitadas)✅
+EXEC dbo.sp_history @pk_leitor = 1, @pk_nucleo = 1, @start_date = '2023-01-01', @end_date = '2023-12-31';
+EXEC dbo.sp_history @pk_leitor = 1, @pk_nucleo = NULL, @start_date = NULL, @end_date = NULL;

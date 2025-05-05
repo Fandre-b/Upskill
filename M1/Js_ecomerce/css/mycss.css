@@ -1,0 +1,226 @@
+.star {
+    font-size: 2rem;
+    color: gray;
+    cursor: pointer;
+    display: inline-block;
+    transition: color 0.3s;
+  }
+
+  .star:before {
+    content: "☆";
+  }
+
+  .star.favorite {
+    color: gold;
+  }
+
+  .star.favorite:before {
+    content: "★";
+  }
+
+/*
+  BUTONS
+*/
+
+/* Ensure the table takes up the full width */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* Style the table cells */
+td {
+    padding: 10px;
+    text-align: center; /* Center-align text in table cells */
+    vertical-align: middle; /* Vertically center-align content in table cells */
+}
+
+/* Style the buttons */
+/* .btn {
+    padding: 5px 10px;
+    margin: 2px;
+    cursor: pointer;
+} */
+
+/* Ensure the images are centered */
+td img {
+    display: block;
+    margin: 0 auto;
+}
+
+.btn {
+    font-size: 1.5rem;
+    padding: 0.5rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    transition: color 0.3s;
+  }
+
+  /* Delete Button (Red Cross) */
+  .btn-delete {
+    color: red;
+  }
+
+  .btn-delete:before {
+    font-size: 1.5rem;
+  }
+
+  .btn-delete:hover {
+    color: darkred;
+  }
+
+  /* Add Button */
+  .btn-add {
+    color: black;
+  }
+
+  .btn-add:before {
+    font-size: 1.5rem;
+  }
+
+  .btn-add:hover {
+    color: #555;
+  }
+
+  /* Subtract Button */
+  .btn-subtract {
+    color: black;
+  }
+
+  .btn-subtract:before {
+    font-size: 1.5rem;
+  }
+
+  .btn-subtract:hover {
+    color: #555;
+  }
+  
+  /* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+ul {
+  list-style-type: none; /* Remove default list styling */
+  padding: 0; /* Remove default padding */
+  margin: 0; /* Remove default margin */
+  display: flex; /* Use Flexbox to align items side by side */
+  align-items: center; /* Align items vertically centered */
+}
+ul li {
+  margin-right: 10px; /* Add some space between items */
+}
+
+.resized-image {
+  width: 28px;
+  height: 28px;
+}
+
+.login {
+  /* padding: 20px 0; */
+  background: #741d51; /* Old browsers */
+  background: -moz-linear-gradient(left, #741d51 0%, #e44e52 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(left, #741d51 0%,#e44e52 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to right, #741d51 0%,#e44e52 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#741d51', endColorstr='#e44e52',GradientType=1 ); /* IE6-9 */
+  color: white;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  padding: 10px 0;
+}
+
+.pagination button {
+  color: #741d51; /* Text color */
+  background-color: white; /* Button background color */
+  border: 1px solid #ddd; /* Border around buttons */
+  padding: 8px 16px;
+  margin: 0 4px; /* Space between pagination items */
+  border-radius: 4px; /* Rounded corners */
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.pagination button:hover {
+  background-color: #ddd; /* Background color on hover */
+}
+
+.pagination button.active {
+  background-color: #741d51; /* Active page background color */
+  color: white; /* Active page text color */
+  border: 1px solid #741d51; /* Active page border color */
+}
+
+.star-rating {
+  display: inline-block;
+  font-size: 24px; /* Adjust font size based on the size of the stars */
+  position: relative;
+  unicode-bidi: bidi-override;
+  color: #ccc; /* Color of empty stars */
+  text-shadow: 1px 1px 2px #000; /* Border effect for empty stars */
+  width: 100px; /* Ensure the container has enough width for 5 stars */
+  height: 24px; /* Ensure the container has enough height for the stars */
+}
+
+.star-rating::before {
+  content: "★★★★★"; /* Five empty stars */
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  color: gold; /* Color of filled stars */
+  text-shadow: 1px 1px 2px #000; /* Border effect for filled stars */
+}
+
+.star-rating[data-rating="0"]::before { width: 0%; }
+.star-rating[data-rating="0.5"]::before { width: 10%; }
+.star-rating[data-rating="1"]::before { width: 20%; }
+.star-rating[data-rating="1.5"]::before { width: 30%; }
+.star-rating[data-rating="2"]::before { width: 40%; }
+.star-rating[data-rating="2.5"]::before { width: 50%; }
+.star-rating[data-rating="3"]::before { width: 60%; }
+.star-rating[data-rating="3.5"]::before { width: 70%; }
+.star-rating[data-rating="4"]::before { width: 80%; }
+.star-rating[data-rating="4.5"]::before { width: 90%; }
+.star-rating[data-rating="5"]::before { width: 100%; }

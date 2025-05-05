@@ -1,0 +1,106 @@
+﻿@page "/tarefas"
+@using Radzen
+@using Radzen.Blazor
+@using BlazorUI.Models
+@inject TarefaService TarefaService
+@rendermode InteractiveServer
+@inject DialogService DialogService
+
+<h3>Lista de Tarefas</h3>
+<button @onclick="OpenAddTarefaDialog" class="add-tarefa-button">Adicionar Nova Tarefa</button>
+<br>
+@if (tarefas == null)
+{
+    <p>Carregando...</p>
+}
+else
+{
+    <h4>Tarefas Pendentes ❌</h4>
+    <ul>
+        @foreach (var tarefa in tarefas.Where(t => !t.Concluida))
+        {
+            <li class="tarefa-item">
+                <div>
+                    <label for="tarefa-@tarefa.Id" class="tarefa-label" @onclick="() => UpdateTask(tarefa)">❌ @tarefa.Text</label>
+                </div>
+                <div class="tarefa-buttons">
+                    <button @onclick="() => EditTarefa(tarefa)" class="add-tarefa-button">Edit</button>
+                    <button @onclick="() => RemoveTask(tarefa)" class="add-tarefa-button">Remover</button>
+                </div>
+            </li>
+        }
+    </ul>
+
+    <h4>Tarefas Concluídas ✅</h4>
+    <ul>
+        @foreach (var tarefa in tarefas.Where(t => t.Concluida))
+        {
+            <li class="tarefa-item">
+                <div>
+                    <label for="tarefa-@tarefa.Id" class="tarefa-label" @onclick="() => UpdateTask(tarefa)">✅ @tarefa.Text</label>
+                </div>
+                <div class="tarefa-buttons">
+                    <button @onclick="() => EditTarefa(tarefa)" class="add-tarefa-button">Edit</button>
+                    <button @onclick="() => RemoveTask(tarefa)" class="add-tarefa-button">Remover</button>
+                </div>
+            </li>
+        }
+    </ul>
+}
+
+@code {
+    private bool isProcessing = false;
+    private List<Tarefa> tarefas;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        tarefas = await TarefaService.GetTarefasAsync();
+    }
+
+    public async Task UpdateTask(Tarefa tarefa)
+    {
+        if (isProcessing) return; // Prevent multiple clicks
+            isProcessing = true;
+        try
+        {
+            tarefa.Concluida = !tarefa.Concluida;
+            await TarefaService.AtualizarTarefaAsync(tarefa);
+            tarefas = await TarefaService.GetTarefasAsync();
+        }
+        finally
+        {
+            isProcessing = false; // Allow clicks again
+        }
+    }
+
+    public async Task EditTarefa(Tarefa tarefa)
+    {
+        var updatedTarefa = await DialogService.OpenAsync<EditTarefaDialog>(
+            "Edit Tarefa",
+            new Dictionary<string, object> { { "Tarefa", tarefa } }
+        );
+        if (updatedTarefa != null)
+        {
+            await TarefaService.AtualizarTarefaAsync(tarefa);
+            tarefas = await TarefaService.GetTarefasAsync();
+            // instead add Object copy constructer, for less overhead
+        }
+    }
+
+    public async Task RemoveTask(Tarefa tarefa)
+    {
+        await TarefaService.RemoverTarefaAsync(tarefa);
+        tarefas = await TarefaService.GetTarefasAsync();
+    }
+
+    async Task OpenAddTarefaDialog()
+    {
+        Tarefa? novaTarefa = await DialogService.OpenAsync<AddTarefaDialog>("Add Tarefa",
+                new Dictionary<string, object> {});
+        if (novaTarefa != null)
+        {
+            await TarefaService.AdicionarTarefaAsync(novaTarefa);
+            tarefas = await TarefaService.GetTarefasAsync();
+        }
+    }
+}
